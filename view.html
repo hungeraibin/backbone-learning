@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>backbone-view</title>
+</head>
+<body>
+  <div id="search_container"></div>
+
+  <script type="text/template" id="search_template">
+   <label><%= search_label %></label>
+    <input type="text" id="search_input">
+    <input type="button" id="search_button" value="Search">
+    <ul>
+      <% _.each(labels, function(name) { %>
+        <% if (name != "label2") { %>
+          <li><%= name %></li>
+        <% } %>
+      <% }); %>
+    </ul>
+  </script>
+
+  <script src="http://the5fireblog.b0.upaiyun.com/staticfile/jquery-1.10.2.js"></script>
+  <script src="http://the5fireblog.b0.upaiyun.com/staticfile/underscore.js"></script>
+  <script src="http://the5fireblog.b0.upaiyun.com/staticfile/backbone.js"></script>
+  <script src="http://the5fireblog.b0.upaiyun.com/staticfile/backbone.localStorage.js"></script>
+  <script>
+    (function($) {
+      var SearchView = Backbone.View.extend({
+        el: "#search_container",
+        initialize: function() {
+          //this.render({search_label: "搜索按钮"});
+          var labels = ['label1', 'label2', 'label3'];
+          this.render({labels: labels, search_label: "搜索按钮"});
+        },
+        render: function(context) {
+          //使用underscore这个库，来编译模板
+          var template = _.template($('#search_template').html());
+          //加载模板到对应的el属性中
+          $(this.el).html(template(context));
+        },
+        events: {
+          //定义类型为button的input标签的点击事件，触发函数doSearch
+          'click input[type=button]': 'doSearch'
+        },
+        doSearch: function(event) {
+          console.log(event); //参数为event事件
+          console.log("search for" + $('#search_input').val());
+        }
+      });
+
+      var searchView = new SearchView;
+      //这个render的方法可以放到view的构造函数中
+      //这样初始化时就会自动渲染
+      //searchView.render({search_label: "搜索渲染"});
+
+    })(jQuery);
+  </script>
+</body>
+</html>

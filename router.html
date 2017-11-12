@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>backbone-router</title>
+</head>
+<body>
+  <a href="#actions">testActions</a>
+  <a href="#posts/12">post/12</a>
+  <a href="#/download/user/images/hey.gif">download gif</a>
+  <a href="#/dashboard/graph">Load Route/Action View</a>
+  <a href="#/manual">manual</a>
+
+  <script src="http://the5fireblog.b0.upaiyun.com/staticfile/jquery-1.10.2.js"></script>
+  <script src="http://the5fireblog.b0.upaiyun.com/staticfile/underscore.js"></script>
+  <script src="http://the5fireblog.b0.upaiyun.com/staticfile/backbone.js"></script>
+  <script src="http://the5fireblog.b0.upaiyun.com/staticfile/backbone.localStorage.js"></script>
+  <script>
+    var AppRouter = Backbone.Router.extend({
+      routes: {
+        //routes映射传参数 :
+        //2.用“:”来把#后面的对应的位置作为参数
+        "posts/:id": "getPost",
+        //4.手动触发router，需要在某一个逻辑中触发某一个事件
+        "manual": "manual",
+        //3.下面对应的链接为<a href="#/download/user/images/hey.gif">download gif</a>
+        "download/*path": "downloadFile",
+        //3.下面对应的链接为<a href="#/dashboard/graph">Load Route/Action View</a>
+        ":router/:action": "loadView",
+        //1.用“*”匹配所有的url
+        "*actions": "defaultRouter"
+      },
+      getPost: function(id) {
+        console.log(id); //12
+      },
+      defaultRouter: function(actions) {
+        console.log(actions); //actions 
+      },
+      downloadFile: function(path) {
+        console.log(path); //user/images/hey.gif
+      },
+      loadView: function(router, action) {
+        console.log(router + "_" + action); // dashboard_graph
+      },
+      manual: function() {
+        console.log("call manual");
+        app_router.navigate("/posts/" + 404, {trigger: true, replace: true});
+        //trigger表示触发事件，如果为false，则只是url变化，并不会触发事件
+        //replace表示url替换，而不是前进到这个url，意味着启用该参数，浏览器的history不会记录这个变动。
+      }
+    });
+
+    var app_router = new AppRouter;
+    //调用Backbone.history.start()方法来初始化Router。
+    Backbone.history.start();
+
+  </script>
+</body>
+</html>
